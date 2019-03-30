@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLY GP CALC</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+     body{
+            background: rgb(130, 28, 34);
+        }
+        h1{
+            font-family: Trebuchet MS;
+            color: #ffffff;
+            margin-top: 30%;
+            font-weight:bolder;
+            font-size: 50px;
+        }
+        h2{
+            font-family: Trebuchet MS;
+            color: #ffffff;
+            margin-top: 5%;            
+        }
+        p{
+            color: #ffffff;
+            font-size:20px;
+        }
+        #start{
+            background: transparent;
+            border: 2px inset lightcoral;
+        }
+		#startr{
+            background: rgb(13, 28, 34);
+            border: 2px inset lightcoral;
+        }
+		
+        #instruct{
+            margin-top: 20%;
+        }
+        #cont{
+            background: rgb(10, 21, 26);
+            border: 1px solid seagreen;
+            color: #ffffff;
+        }
+        #pg3{
+            margin-top: 2%;
+        }
+        #calc{
+            background: transparent;
+            border: 2px solid seagreen;
+            margin-left: 15px;
+        }
+        #cont{
+            background: transparent;
+            border: 2px solid cyan;
+            
+        }
+    </style>
+</head>
+<body>
+
+    <div id="landPage" class="col-sm-8 col-sm-offset-2">
+        <h1>Welcome to AutoCalC for Polytechnics</h1>
+        <p>This will Help you Calculate You GP</p>
+        <button class="btn btn-primary btn-lg" id="start">GET STARTED >></button>
+    </div>
+
+    <div id="pgTwo" class="col-sm-8 col-sm-offset-2">
+		<h1>Welcome to AutoCalC for Polytechnics</h1>
+        <p id="instruct">PLEASE FILL OUT THE FOLLOWING FIELDS</p>
+        <form role="form">
+            <div class="form-group">
+                <input class="form-control" type="text" id="name" placeholder="input your full name">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" id="dept" placeholder="input your department">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" id="lvl" placeholder="input your level">
+            </div>
+            <div class="form-group">
+                <input class="form-control" min="1" type="number" id="noC" placeholder="number of courses offered">
+            </div>
+            
+                <button class="btn btn-primary btn-lg" id="cont">PROCEED</button>
+            
+        </form>
+    </div>
+
+    <div id="pg3" class="col-sm-12 ">
+
+            <h2>Input Course Details</h2><hr>
+
+            <button class="btn btn-primary btn-lg clx" id="calc">CALCULATE</button>
+        
+    </div>
+
+    <div id="pg4" class="col-sm-12">
+        <h2>RESULT SHEET</h2><hr>
+    </div>
+
+<script src="jquery-3.2.1.min.js"></script>
+<script src="bootstrap.min.js"></script>
+    <script>
+        $(function() {
+            $('#pgTwo').hide(); // hides the form div on page load
+            $('#pg3').hide(); // hides the pg3 div on page load
+            $('#pg4').hide();
+
+            // shows the form div on click of get started and hides the landing page
+            $('#start').click(function(){
+                $('#landPage').fadeOut();
+                $('#pgTwo').fadeIn();
+            });
+
+            // global variables that get the values of the data in the form fields;
+            
+
+
+            // creates the appropriate input fields where the user
+            // will input his course name and credit units on click of proceed button
+            $('#cont').click(function(e) {
+                e.preventDefault();
+                $('#pgTwo').fadeOut();
+                $('#pg3').fadeIn();
+                 userName = $('#name').val(); // gets the user's name
+                 userDept = $('#dept').val(); // gets the user's department
+                 userLvl = $('#lvl').val(); // gets the user's level
+                let userC = $('#noC').val(); // gets the user's number of courses
+                for(let x = 0; x<userC; x++ ){
+                    $('.clx').before("<div class='form-group col-sm-6'>" + 
+                                        "<input type='text' class='form-control' placeholder='input coursename'></div>"+
+                                    "<div class='form-group col-sm-2'>"+
+                                        "<select class='form-control grade'>" +
+                                            "<option>A</option>"+
+											"<option>AB</option>"+
+                                            "<option>B</option>"+
+                                            "<option>BC</option>"+
+                                            "<option>C</option>"+
+											"<option>CD</option>"+
+                                            "<option>D</option>"+
+                                            "<option>P</option>"+
+                                            "<option>F1</option>"+
+                                            "<option>F2</option>"+
+											"<option>F3</option>"+
+                                        "</select>"+
+                                    "</div>"+
+                                    "<div class='form-group col-sm-4'>"+
+                                        "<input type='number' min='0' class='form-control creditUnit' placeholder='input course creditUnit'>"+
+                                    "</div> "  + "<hr>");
+                }
+            });
+
+            // algorithm to calculate the gp
+            $('#calc').click(function() {
+                let gradeArray = []; // array of all the grades gotten by the user
+                let creditUnitArray = []; // array of the credit units of the courses of the user 
+                let gradeByUnit = []; // array of multiplying each user grade by the corresponding credit unit of the course
+                let sumGradeByUnit = 0; // gets the sum of the contents in gradeByUnit Array
+                let sumUnit = 0;  // gets the sum of all the credit units
+                let cgpa = 0; 
+                let grade;
+
+                $('.grade').each(function() {
+                    grade = $(this).find(':selected').val(); //gets the selected user grade
+                    switch (grade) {
+                        case "A": 
+                        grade = 4; break;
+                        case "AB": 
+                        grade = 3.5; break;
+                        case "B": 
+                        grade = 3.25; break;
+                        case "BC": 
+                        grade = 3; break;
+                        case "C": 
+                        grade = 2.75; break;
+                        case "CD": 
+                        grade = 2.5; break;
+						case "D": 
+                        grade = 2.25; break;
+                        case "P": 
+                        grade = 2; break;
+                        case "F1": 
+                        grade = 1.75; break;
+                        case "F2": 
+                        grade = 1.5; break;
+                        case "F3": 
+                        grade = 1.25; break;
+                       };
+                    gradeArray[gradeArray.length] = grade;
+                });
+                $('.creditUnit').each(function() {
+                  creditUnitArray[creditUnitArray.length] =   ($(this).val() != null) ?  $(this).val() : "0" ;
+                    sumUnit += parseFloat(this.value); // gets the sum of all the credit units
+                });
+
+                for (let i = 0; i < creditUnitArray.length; i++) {
+                    gradeByUnit[gradeByUnit.length] = gradeArray[i] * creditUnitArray[i];
+                };
+
+                for (let index = 0; index < gradeByUnit.length; index++) {
+                    sumGradeByUnit += parseFloat(gradeByUnit[index]);
+                };
+
+                cgpa = sumGradeByUnit / sumUnit;
+
+                $('#pg3').fadeOut();
+                $('#pg4').fadeIn();
+				
+				if(cgpa.toFixed(2) >= 3.50 && cgpa.toFixed(2) <=4.00)
+				{
+                $('#pg4').append("<p> Name: "+userName+"</p>"+
+                                 "<p> Department: "+userDept+"</p>"+
+                                 "<p> Level: "+userLvl+"</p>"+
+                                 "<p> GPA: "+cgpa.toFixed(2)+"</p>"+
+								 "<p> GRADE: DISTINCTION</p>"+
+								 "<h4> Congratulations- You Are A Genius </h4>"
+                );
+                }
+				
+				else if(cgpa.toFixed(2) >= 3.00 && cgpa.toFixed(2) <=3.49 )
+				{
+                $('#pg4').append("<p> Name: "+userName+"</p>"+
+                                 "<p> Department: "+userDept+"</p>"+
+                                 "<p> Level: "+userLvl+"</p>"+
+                                 "<p> GPA: "+cgpa.toFixed(2)+"</p>"+
+								 "<p> GRADE: UPPER CREDIT</p>"+
+								 "<h4> Congratulations-Keep It Up </h4>"
+                );
+                }
+				
+				else if(cgpa.toFixed(2) >= 2.50 && cgpa.toFixed(2) <=2.99)
+				{
+                $('#pg4').append("<p> Name: "+userName+"</p>"+
+                                 "<p> Department: "+userDept+"</p>"+
+                                 "<p> Level: "+userLvl+"</p>"+
+                                 "<p> GPA: "+cgpa.toFixed(2)+"</p>"+
+								 "<p> GRADE: LOWER CREDIT</p>"+
+								 "<h4> Congratulations- You Can Do Better </h4>"
+                );
+                }
+				
+				else if(cgpa.toFixed(2) >= 2.00 && cgpa.toFixed(2) <= 2.49)
+				{
+                $('#pg4').append("<p> Name: "+userName+"</p>"+
+                                 "<p> Department: "+userDept+"</p>"+
+                                 "<p> Level: "+userLvl+"</p>"+
+                                 "<p> GPA: "+cgpa.toFixed(2)+"</p>"+
+								 "<p> GRADE: PASS</p>"+
+								 "<h4> Congratulations - Work Hard on Your Studies </h4>"
+                );
+                }
+				
+				else if(cgpa.toFixed(2) >= 1.50 && cgpa.toFixed(2) <= 1.99 )
+				{
+                $('#pg4').append("<p> Name: "+userName+"</p>"+
+                                 "<p> Department: "+userDept+"</p>"+
+                                 "<p> Level: "+userLvl+"</p>"+
+                                 "<p> GPA: "+cgpa.toFixed(2)+"</p>"+
+								 "<p> GRADE: FAIL </p>"+
+								 "<h4> Congratulations - Never Give Up,You Can Still Become Something</h4>"
+                );
+                }
+				
+				else
+				{
+                $('#pg4').append("<p> Name: "+userName+"</p>"+
+                                 "<p> Department: "+userDept+"</p>"+
+                                 "<p> Level: "+userLvl+"</p>"+
+                                 "<p> GPA: "+cgpa.toFixed(2)+"</p>"+
+								 "<p> GRADE: </p>"
+                );
+                }
+				
+				
+
+            });
+
+        });
+
+    </script>
+</body>
+</html>
